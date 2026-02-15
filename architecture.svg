@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" >
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+            markerUnits="strokeWidth" markerWidth="10" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2b6cb0" />
+    </marker>
+    <style type="text/css"><![CDATA[
+      .title { font: bold 18px sans-serif; fill:#0b1220; }
+      .label { font: 13px sans-serif; fill:#0b1220; }
+      .box { fill:#e6f2ff; stroke:#2b6cb0; stroke-width:2; rx:8; ry:8; }
+      .smallbox { fill:#fff7ed; stroke:#dd6b20; stroke-width:1.6; rx:6; ry:6; }
+      .component { fill:#f0fff4; stroke:#10b981; stroke-width:2; rx:8; ry:8; }
+      .infra { fill:#f7f7fb; stroke:#6b7280; stroke-width:1.6; rx:6; ry:6; }
+      .note { font: 12px sans-serif; fill:#374151; }
+      .arrow { stroke:#2b6cb0; stroke-width:2.2; fill:none; marker-end:url(#arrow); }
+    ]]></style>
+  </defs>
+
+  <!-- Title -->
+  <text x="28" y="30" class="title">Mutant Detector — Architecture (Frontend ⇢ Ingestion ⇢ Persistence)</text>
+
+  <!-- Frontend / Client -->
+  <g>
+    <rect x="30" y="60" width="220" height="80" class="box" />
+    <text x="50" y="90" class="label">Browser / React UI</text>
+    <text x="50" y="110" class="note">POST /mutant &amp; GET /stats</text>
+
+    <!-- optional CDN -->
+    <rect x="280" y="60" width="160" height="80" class="infra" />
+    <text x="300" y="90" class="label">CDN (optional)</text>
+    <text x="300" y="110" class="note">Static assets</text>
+
+    <!-- Arrow Frontend -> LB -->
+    <path d="M250 100 L 280 100" class="arrow"/>
+  </g>
+
+  <!-- Load Balancer / API Gateway -->
+  <g>
+    <rect x="480" y="50" width="260" height="100" class="smallbox" />
+    <text x="500" y="80" class="label">Load Balancer / API Gateway</text>
+    <text x="500" y="100" class="note">TLS / Rate-limit / WAF</text>
+  </g>
+
+  <!-- Arrow CDN -> LB -->
+  <path d="M440 100 L 480 100" class="arrow"/>
+
+  <!-- Application tier (Fastify instances) -->
+  <g>
+    <text x="30" y="190" class="label">Application Tier (stateless)</text>
+
+    <!-- Instance 1 -->
+    <rect x="30" y="210" width="360" height="120" class="infra" />
+    <text x="50" y="240" class="label">Fastify App Instance #1</text>
+    <text x="50" y="260" class="note">isMutant(dna) detection</text>
+    <text x="50" y="278" class="note">generate hash, enqueue or upsert</text>
+
+    <!-- Instance 2 -->
+    <rect x="410" y="210" width="360" height="120" class="infra" />
+    <text x="430" y="240" class="label">Fastify App Instance #2</text>
+    <text x="430" y="260" class="note">scale horizontally</text>
+    <text x="430" y="278" class="note">stateless, behind LB</text>
+
+    <!-- Instance N -->
+    <rect x="790" y="210" width="360" height="120" class="infra" />
+    <text x="810" y="240" class="label">Fastify App Instance #N</text>
+    <text x="810" y="260" class="note">autoscale</text>
+  </g>
+
+  <!-- Arrows LB -> App Instances -->
+  <path d="M560 150 L 210 210" class="arrow"/>
+  <path d="M610 150 L 590 210" class="arrow"/>
+  <path d="M610 150 L 840 210" class="arrow"/>
+
+  <!-- Side services: Redis, Queue -->
+  <g>
+    <!-- Redis -->
+    <rect x="30" y="360" width="260" height="80" class="component" />
+    <text x="50" y="390" class="label">Redis (optional)</text>
+    <text x="50" y="410" class="note">Dedup cache / stats cache / rate-limit</text>
+
+    <!-- Queue -->
+    <rect x="410" y="360" width="260" height="80" class="smallbox" />
+    <text x="430" y="390" class="label">Message Queue (Kafka/Rabbit/SQS)</text>
+    <text x="430" y="410" class="note">Enqueue write jobs (hash, dna, is_mutant)</text>
+
+    <!-- Worker Pool -->
+    <rect x="790" y="360" width="360" height="120" class="component" />
+    <text x="810" y="390" class="label">Worker Pool</text>
+    <text x="810" y="410" class="note">Consume queue &amp; batch upserts to DB</text>
+    <text x="810" y="428" class="note">Update stats cache</text>
+  </g>
+
+  <!-- Arrows: App Instances -> Redis / Queue -->
+  <path d="M200 330 L 200 360" class="arrow"/>
+  <path d="M560 330 L 560 360" class="arrow"/>
+  <path d="M940 330 L 940 360" class="arrow"/>
+
+  <!-- Persistence DB -->
+  <g>
+    <rect x="30" y="500" width="360" height="120" class="box" />
+    <text x="50" y="530" class="label">Persistent DB</text>
+    <text x="50" y="550" class="note">Dev: async SQLite (WAL) </text>
+    <text x="50" y="568" class="note">Prod: Postgres / Managed RDBMS</text>
+
+    <!-- Metrics & Logs -->
+    <rect x="410" y="500" width="360" height="120" class="infra" />
+    <text x="430" y="530" class="label">Observability</text>
+    <text x="430" y="550" class="note">Prometheus / Traces / Logs</text>
+    <text x="430" y="568" class="note">Alerts & dashboards</text>
+
+    <!-- Optional: Cache for stats -->
+    <rect x="790" y="500" width="360" height="120" class="smallbox" />
+    <text x="810" y="530" class="label">Stats Cache (Redis)</text>
+    <text x="810" y="550" class="note">Short TTL cached aggregations</text>
+  </g>
+
+  <!-- Arrows: Worker -> DB -->
+  <path d="M940 480 L 300 500" class="arrow"/>
+
+  <!-- Arrows: Worker -> Stats Cache -->
+  <path d="M940 480 L 940 500" class="arrow"/>
+
+  <!-- Arrows: App Instances -> Worker (enqueue) -->
+  <path d="M210 330 L 480 330 L 480 380" class="arrow" />
+  <path d="M590 330 L 560 380" class="arrow" />
+  <path d="M840 330 L 740 380" class="arrow" />
+
+  <!-- DB reads for /stats: App -> Stats Cache -> DB -->
+  <path d="M500 330 L 930 500" class="arrow" />
+
+  <!-- Legend / notes -->
+  <g>
+    <rect x="30" y="660" width="1120" height="140" class="infra" />
+    <text x="50" y="690" class="label">Notes & Recommendations</text>
+    <text x="50" y="710" class="note">• Use queue + workers to avoid SQLite write contention at high load.</text>
+    <text x="50" y="730" class="note">• Use Redis for deduplication and short-lived stats cache.</text>
+    <text x="50" y="750" class="note">• Persist one unique record per DNA using sha256(hash) + unique constraint/upsert.</text>
+    <text x="50" y="770" class="note">• Scale app instances behind LB; move to Postgres for multi-writer production.</text>
+  </g>
+</svg>
