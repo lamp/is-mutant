@@ -107,7 +107,7 @@
     <rect x="410" y="500" width="360" height="120" class="infra" />
     <text x="430" y="530" class="label">Observability</text>
     <text x="430" y="550" class="note">Prometheus / Traces / Logs</text>
-    <text x="430" y="568" class="note">Alerts & dashboards</text>
+    <text x="430" y="568" class="note">Alerts &amp; dashboards</text>
 
     <!-- Optional: Cache for stats -->
     <rect x="790" y="500" width="360" height="120" class="smallbox" />
@@ -132,7 +132,7 @@
   <!-- Legend / notes -->
   <g>
     <rect x="30" y="660" width="1120" height="140" class="infra" />
-    <text x="50" y="690" class="label">Notes & Recommendations</text>
+    <text x="50" y="690" class="label">Notes &amp; Recommendations</text>
     <text x="50" y="710" class="note">• Use queue + workers to avoid SQLite write contention at high load.</text>
     <text x="50" y="730" class="note">• Use Redis for deduplication and short-lived stats cache.</text>
     <text x="50" y="750" class="note">• Persist one unique record per DNA using sha256(hash) + unique constraint/upsert.</text>
