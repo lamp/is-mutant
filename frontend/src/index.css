@@ -1,0 +1,4 @@
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f8fb;color:#0b1220;padding:20px}
+.app{max-width:800px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center}
+textarea{font-family:monospace}
