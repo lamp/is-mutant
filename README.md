@@ -54,8 +54,10 @@ Notes
 - The backend uses an asynchronous sqlite driver (sqlite + sqlite3).
 - For heavy scale, consider moving persistence to a queue/batcher or an external DB for multi-process writes.
 - Tests use an in-memory repository; they do not require SQLite.
+- To improve the stats endpoint performance, consider caching the results or using a more efficient data structure to track counts without needing to query the entire database each time.
 
-Architecture diagram (simplified):
+### Architecture diagram (simplified):
+
 [Architecture Diagram](architecture.svg)
 
 ### Performance and Scalability
