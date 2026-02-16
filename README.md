@@ -25,6 +25,7 @@ Run tests:
 
 - npm install
 - npm run dev
+- Go to [http://localhost:5173/](http://localhost:5173/) in your browser.
 
 ### Api Documentation
 API
