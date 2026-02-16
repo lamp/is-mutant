@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600" >
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+            markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0b5cff" />
+    </marker>
+    <style type="text/css"><![CDATA[
+      .title { font: bold 18px sans-serif; fill:#0b1220; }
+      .subtitle { font: 12px sans-serif; fill:#374151; }
+      .box { fill:#f3f8ff; stroke:#0b5cff; stroke-width:2; rx:8; ry:8; }
+      .box-db { fill:#fff7ed; stroke:#d97706; stroke-width:2; rx:8; ry:8; }
+      .box-test { fill:#f0fff4; stroke:#059669; stroke-width:2; rx:8; ry:8; }
+      .label { font: 13px sans-serif; fill:#0b1220; }
+      .note { font: 12px sans-serif; fill:#374151; }
+      .arrow { stroke:#0b5cff; stroke-width:2.2; fill:none; marker-end:url(#arrow); }
+    ]]></style>
+  </defs>
+
+  <!-- Title -->
+  <text x="28" y="36" class="title">Current System Architecture</text>
+  <text x="28" y="56" class="subtitle">(what's implemented: React frontend, Fastify API, async SQLite, in-memory repo for tests)</text>
+
+  <!-- Frontend -->
+  <g>
+    <rect x="40" y="100" width="240" height="100" class="box" />
+    <text x="60" y="130" class="label">React Frontend (Vite)</text>
+    <text x="60" y="150" class="note">- UI: submit DNA (POST /mutant/)</text>
+    <text x="60" y="168" class="note">- Fetch stats (GET /stats/)</text>
+  </g>
+
+  <!-- Arrow Frontend -> Backend -->
+  <path d="M280 150 L 360 150" class="arrow" />
+
+  <!-- Backend -->
+  <g>
+    <rect x="360" y="100" width="300" height="160" class="box" />
+    <text x="380" y="130" class="label">Fastify Backend</text>
+    <text x="380" y="150" class="note">- Routes: POST /mutant/ , GET /stats/</text>
+    <text x="380" y="168" class="note">- isMutant detection (in-process)</text>
+    <text x="380" y="186" class="note">- Repo abstraction injected (SqliteRepo or InMemoryRepo)</text>
+  </g>
+
+  <!-- Arrow Backend -> SQLite -->
+  <path d="M510 260 L 510 320" class="arrow" />
+
+  <!-- Database -->
+  <g>
+    <rect x="400" y="320" width="220" height="120" class="box-db" />
+    <text x="420" y="350" class="label">Async SQLite (sqlite + sqlite3)</text>
+    <text x="420" y="370" class="note">- dna_records table</text>
+    <text x="420" y="388" class="note">- WAL mode, async queries</text>
+    <text x="420" y="406" class="note">- dev persistence</text>
+  </g>
+
+  <!-- Arrow Backend -> InMemoryRepo (tests) -->
+  <path d="M360 200 L 240 320" class="arrow" />
+
+  <!-- In-memory repo (used by tests) -->
+  <g>
+    <rect x="160" y="320" width="180" height="100" class="box-test" />
+    <text x="180" y="350" class="label">InMemoryRepository</text>
+    <text x="180" y="370" class="note">- Used by Jest integration/unit tests</text>
+    <text x="180" y="388" class="note">- Deduplication via SHA256 hash</text>
+  </g>
+
+  <!-- Tests group -->
+  <g>
+    <rect x="640" y="320" width="300" height="120" class="box-test" />
+    <text x="660" y="350" class="label">Tests (Jest + Supertest)</text>
+    <text x="660" y="370" class="note">- Unit: isMutant logic</text>
+    <text x="660" y="388" class="note">- Integration: start server with InMemoryRepo or SqliteRepo</text>
+  </g>
+
+  <!-- Arrows Tests -> Backend -->
+  <path d="M640 300 L 660 260 L 660 190 L 570 190" class="arrow" />
+  <path d="M660 190 L 570 190 L 570 160" class="arrow" />
+
+  <!-- Legend / notes -->
+  <g>
+    <rect x="40" y="460" width="900" height="110" fill="#f8fafc" stroke="#e2e8f0" rx="6" ry="6"/>
+    <text x="60" y="484" class="label">Notes</text>
+    <text x="60" y="506" class="note">• Single Fastify instance by default (local dev).</text>
+    <text x="60" y="526" class="note">• Async SQLite is the production dev DB for this repo; recommended for single-process use.</text>
+    <text x="60" y="546" class="note">• Tests use InMemoryRepository to avoid external dependencies; integration tests can use a temp SQLite file.</text>
+  </g>
+
+</svg>

@@ -58,7 +58,8 @@ Notes
 
 ### Architecture diagram (simplified):
 
-[Architecture Diagram](architecture.svg)
+[Productionised Architecture Diagram](architecture-production.svg)
+[Current Architecture Diagram](architecture-current.svg)
 
 ### Performance and Scalability
 - The mutant detection algorithm runs in O(N^2) time, which is efficient for typical DNA sizes (e.g., 6x6).
